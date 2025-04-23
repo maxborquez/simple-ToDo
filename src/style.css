@@ -1,14 +1,14 @@
 @font-face {
-  font-family: 'RobotoMono';
-  src: url('fonts/RobotoMono-VariableFont_wght.ttf') format('truetype');
+  font-family: "RobotoMono";
+  src: url("fonts/RobotoMono-VariableFont_wght.ttf") format("truetype");
 }
 
-body{
+body {
   margin: 0;
   padding: 0;
   height: 100vh;
   width: 100vw;
-  font-family: 'RobotoMono', Arial, Helvetica, sans-serif;
+  font-family: "RobotoMono", Arial, Helvetica, sans-serif;
   display: grid;
   grid-template-columns: 20% 80%;
   grid-template-rows: 10% 90%;
@@ -24,7 +24,7 @@ header {
   border: 1px solid black;
 }
 
-aside{
+aside {
   grid-column: 1/2;
   grid-row: 2/3;
   border: 1px solid black;
@@ -46,16 +46,16 @@ aside{
   border: 1px solid black;
 }
 
-#toDoTitle{
+#toDoTitle {
   display: flex;
   align-items: center;
-  gap: 1rem
+  gap: 1rem;
 }
 
-#projectTitle{
+#projectTitle {
   display: flex;
   align-items: center;
-  gap: 1rem
+  gap: 1rem;
 }
 
 #newTask {
@@ -64,7 +64,7 @@ aside{
   background-color: white;
 }
 
-#newTask:hover{
+#newTask:hover {
   background-color: lightgrey;
 }
 
@@ -74,17 +74,17 @@ aside{
   background-color: white;
 }
 
-#newProject:hover{
+#newProject:hover {
   background-color: lightgrey;
 }
 
-#content > div{
+#content > div {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-ul{
+ul {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -107,7 +107,7 @@ ul{
   text-align: start;
 }
 
-.editProjectButton{
+.editProjectButton {
   background-color: transparent;
   border: none;
   font-size: 18px;
@@ -115,16 +115,18 @@ ul{
   text-align: center;
 }
 
-.editProjectButton>svg:hover{
+.editProjectButton > svg:hover {
   fill: red;
 }
 
-#toDoUl, #doingUl, #doneUl{
+#toDoUl,
+#doingUl,
+#doneUl {
   list-style: none;
   text-align: center;
 }
 
-.taskCard{
+.taskCard {
   list-style: none;
   text-align: start;
   border: 1px solid black;
@@ -134,15 +136,14 @@ ul{
   padding-left: 1rem;
 }
 
-.editTaskButton{
+.editTaskButton {
   background-color: transparent;
   border: none;
 }
 
-.editTaskButton>svg:hover{
+.editTaskButton > svg:hover {
   fill: red;
 }
-
 
 dialog {
   background-color: white;
@@ -167,4 +168,20 @@ input {
   border: 1px solid black;
   padding: 5px;
   border-radius: 5px;
+}
+
+.create {
+  background-color: white;
+  font-size: 1.2rem;
+}
+
+.cancel {
+  background-color: white;
+  font-size: 1.2rem;
+}
+
+
+.create:hover, .cancel:hover{
+  background-color: black;
+  color: white;
 }

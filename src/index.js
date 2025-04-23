@@ -21,6 +21,8 @@ class Task {
   }
 }
 
+let currentProject = null;
+
 const project_1 = new Project("Daily tasks");
 const project_2 = new Project("Exercises");
 
@@ -53,11 +55,11 @@ function loadFromLocalStorage() {
   const parsed = JSON.parse(data);
 
   // Reconstruir las instancias de Project y Task
-  return parsed.map(projectData => {
+  return parsed.map((projectData) => {
     const project = new Project(projectData.name);
     project.project_id = projectData.project_id;
 
-    project.tasks = projectData.tasks.map(taskData => {
+    project.tasks = projectData.tasks.map((taskData) => {
       const task = new Task(taskData.description);
       task.task_id = taskData.task_id;
       task.status = taskData.status;
@@ -93,7 +95,10 @@ function populateProjects(projects_array) {
     edit_project.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>`;
     li.appendChild(edit_project);
 
-    projectButton.addEventListener("click", () => populateTasks(element));
+    projectButton.addEventListener("click", () => {
+      currentProject = element;
+      populateTasks(element);
+    });
   });
 }
 
@@ -142,21 +147,20 @@ function populateTasks(project) {
 
 populateProjects(projects_array);
 
-const newProjectBtn = document.querySelector("#newProject")
-const cancelProjectBtn = document.querySelector("#cancelProject")
+const newProjectBtn = document.querySelector("#newProject");
+const cancelProjectBtn = document.querySelector("#cancelProject");
 
 // Get dialog and form
 const newProjectDialog = document.getElementById("newProjectDialog");
 const newProjectForm = document.getElementById("newProjectForm");
 
-newProjectBtn.addEventListener("click", () => newProjectDialog.showModal())
+newProjectBtn.addEventListener("click", () => newProjectDialog.showModal());
 
-function createProject(projectName){
+function createProject(projectName) {
   const project = new Project(projectName);
   projects_array.push(project);
   saveToLocalStorage(); // Guarda al agregar
 }
-
 
 newProjectForm.addEventListener("submit", () => {
   const newProjectName = document.querySelector("#newProjectName");
@@ -165,15 +169,34 @@ newProjectForm.addEventListener("submit", () => {
   populateProjects(projects_array);
 
   newProjectDialog.close(); // Cierra el diálogo
-})
+});
 
-cancelProjectBtn.addEventListener("click", () => newProjectDialog.close())
+cancelProjectBtn.addEventListener("click", () => newProjectDialog.close());
 
 const newTaskDialog = document.getElementById("newTaskDialog");
 const newTaskForm = document.getElementById("newTaskForm");
-const newTaskButton = document.querySelector("#newTask")
+const newTaskButton = document.querySelector("#newTask");
 
 newTaskButton.addEventListener("click", () => newTaskDialog.showModal());
-const cancelTaskBtn = document.querySelector("#cancelTask")
+const cancelTaskBtn = document.querySelector("#cancelTask");
 
-cancelTaskBtn.addEventListener("click", () => newTaskDialog.close())
+cancelTaskBtn.addEventListener("click", () => newTaskDialog.close());
+
+newTaskForm.addEventListener("submit", (e) => {
+  e.preventDefault(); // <- evita que se recargue la página
+
+  const newTaskName = document.querySelector("#newTaskName").value;
+
+  if (!currentProject) {
+    alert("Please select a project first.");
+    return;
+  }
+
+  const newTask = new Task(newTaskName);
+  currentProject.addTask(newTask);
+  saveToLocalStorage(); // <- muy importante
+
+  populateTasks(currentProject);
+  newTaskDialog.close();
+  newTaskForm.reset(); // Limpia el formulario
+});
