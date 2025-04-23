@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple ToDo</title>
+  </head>
+  <body>
+    <header>
+      <h1>Simple ToDo</h1>
+    </header>
+
+    <aside>
+      <h2 id="projectTitle">Projects<button id="newProject">+</button></h2>
+      <ul id="projectColumn"></ul>
+    </aside>
+
+    <div id="content">
+      <div id="toDo">
+        <h2 id="toDoTitle">ToDo <button id="newTask">+</button></h2>
+        <ul id="toDoUl">
+        </ul>
+      </div>
+      <div id="doing">
+        <h2>Doing</h2>
+        <ul id="doingUl"></ul>
+      </div>
+      <div id="done">
+        <h2>Done</h2>
+        <ul id="doneUl"></ul>
+      </div>
+    </div>
+
+    <dialog id="newProjectDialog">
+      <form method="dialog" id="newProjectForm">
+        <div id="formContainer">
+          <h2>New Project</h2>
+          <div class="nameRow">
+            <label for="newProjectName">project name: </label>
+            <input type="text" id="newProjectName" name="newProjectName">
+          </div>
+
+          <menu>
+            <button type="submit" id="createProject">Create</button>
+            <button type="button" id="cancelProject">Cancel</button>
+          </menu>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="newTaskDialog">
+      <form method="dialog" id="newTaskForm">
+        <div id="formContainer">
+          <h2>New task</h2>
+          <div class="nameRow">
+            <label for="newTaskName">task name: </label>
+            <input type="text" id="newTaskName" name="newTaskName">
+          </div>
+
+          <menu>
+            <button type="submit" id="createTask">Create</button>
+            <button type="button" id="cancelTask">Cancel</button>
+          </menu>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>
