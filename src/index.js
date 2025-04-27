@@ -21,8 +21,6 @@ class Task {
   }
 }
 
-let currentProject = null;
-
 const project_1 = new Project("Daily tasks");
 const project_2 = new Project("Exercises");
 
@@ -54,7 +52,6 @@ function loadFromLocalStorage() {
 
   const parsed = JSON.parse(data);
 
-  // Reconstruir las instancias de Project y Task
   return parsed.map((projectData) => {
     const project = new Project(projectData.name);
     project.project_id = projectData.project_id;
@@ -73,34 +70,77 @@ function loadFromLocalStorage() {
 
 let projects_array = loadFromLocalStorage();
 if (projects_array.length === 0) {
-  // Si no hay datos guardados, usa los por defecto
   projects_array = [project_1, project_2];
   saveToLocalStorage();
 }
 
+const projectColumn = document.querySelector("#projectColumn");
+const editPDialog = document.querySelector("#editPDialog");
+const editPForm = document.querySelector("#editPForm");
+const cancelEditP = document.querySelector("#cancelEditP");
+const editPInput = document.querySelector("#editProjectName");
+
+let currentProject;
+let currentEditingProject;
+
 function populateProjects(projects_array) {
-  const projectColumn = document.querySelector("#projectColumn");
   projectColumn.innerHTML = ``;
 
   projects_array.forEach((element) => {
     const li = document.createElement("li");
     li.classList.add("projectName");
     projectColumn.appendChild(li);
+
     const projectButton = document.createElement("button");
     projectButton.classList.add("projectButton");
     projectButton.textContent = element.name;
     li.appendChild(projectButton);
+
     const edit_project = document.createElement("button");
     edit_project.classList.add("editProjectButton");
     edit_project.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>`;
+
+    edit_project.dataset.projectId = element.project_id;
     li.appendChild(edit_project);
 
     projectButton.addEventListener("click", () => {
       currentProject = element;
       populateTasks(element);
     });
+
+    edit_project.addEventListener("click", (e) => {
+      const projectId = e.currentTarget.dataset.projectId;
+      const project = projects_array.find((p) => p.project_id === projectId);
+
+      if (project) {
+        currentEditingProject = project;
+        editPInput.value = project.name;
+        editPDialog.showModal();
+      }
+    });
   });
 }
+
+editPForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const newName = editPInput.value.trim();
+  if (newName && currentEditingProject) {
+    currentEditingProject.name = newName;
+    saveToLocalStorage();
+    populateProjects(projects_array);
+    editPDialog.close();
+  }
+});
+
+cancelEditP.addEventListener("click", () => editPDialog.close());
+
+const editTDialog = document.querySelector("#editTDialog");
+const editTForm = document.querySelector("#editTForm");
+const editTInput = document.querySelector("#editTName");
+const editTCategory = document.querySelector("#category")
+const cancelEditT = document.querySelector("#cancelEditT");
+let currentEditingTask;
 
 function populateTasks(project) {
   const toDoUl = document.querySelector("#toDoUl");
@@ -120,6 +160,7 @@ function populateTasks(project) {
         li.textContent = task.description;
         edit_task.classList.add("editTaskButton");
         edit_task.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>`;
+        edit_task.dataset.taskId = task.task_id;
         li.appendChild(edit_task);
         toDoUl.appendChild(li);
         break;
@@ -128,6 +169,7 @@ function populateTasks(project) {
         li.textContent = task.description;
         edit_task.classList.add("editTaskButton");
         edit_task.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>`;
+        edit_task.dataset.taskId = task.task_id;
         li.appendChild(edit_task);
         doingUl.appendChild(li);
         break;
@@ -136,67 +178,101 @@ function populateTasks(project) {
         li.textContent = task.description;
         edit_task.classList.add("editTaskButton");
         edit_task.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>`;
+        edit_task.dataset.taskId = task.task_id;
         li.appendChild(edit_task);
         doneUl.appendChild(li);
         break;
       default:
         break;
     }
+
+    edit_task.addEventListener("click", (e) => {
+      const taskId = e.currentTarget.dataset.taskId;
+
+      currentEditingTask = currentProject.tasks.find(
+        (task) => task.task_id === taskId
+      );
+
+      if (currentEditingTask) {
+        editTInput.value = currentEditingTask.description;
+        editTCategory.value = currentEditingTask.status;
+        editTDialog.showModal();
+      }
+    });
   });
 }
+
+editTForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const newDescription = editTInput.value.trim();
+  const newCategory = editTCategory.value;
+  if (newDescription && currentEditingTask) {
+    currentEditingTask.description = newDescription;
+    currentEditingTask.status = newCategory;
+    saveToLocalStorage();
+    populateTasks(currentProject);
+    editTDialog.close();
+  }
+});
+
+cancelEditT.addEventListener("click", () => editTDialog.close());
 
 populateProjects(projects_array);
 
 const newProjectBtn = document.querySelector("#newProject");
-const cancelProjectBtn = document.querySelector("#cancelProject");
+const cancelPBtn = document.querySelector("#cancelP");
 
-// Get dialog and form
-const newProjectDialog = document.getElementById("newProjectDialog");
-const newProjectForm = document.getElementById("newProjectForm");
+const newPDialog = document.getElementById("newPDialog");
+const newPForm = document.getElementById("newPForm");
 
-newProjectBtn.addEventListener("click", () => newProjectDialog.showModal());
+newProjectBtn.addEventListener("click", () => newPDialog.showModal());
 
-function createProject(projectName) {
+function createP(projectName) {
   const project = new Project(projectName);
   projects_array.push(project);
-  saveToLocalStorage(); // Guarda al agregar
+  saveToLocalStorage();
 }
 
-newProjectForm.addEventListener("submit", () => {
-  const newProjectName = document.querySelector("#newProjectName");
-  createProject(newProjectName.value);
+newPForm.addEventListener("submit", () => {
+  const newPName = document.querySelector("#newPName");
+  createP(newPName.value);
 
   populateProjects(projects_array);
 
-  newProjectDialog.close(); // Cierra el diálogo
+  newPDialog.close();
 });
 
-cancelProjectBtn.addEventListener("click", () => newProjectDialog.close());
+cancelPBtn.addEventListener("click", () => newPDialog.close());
 
-const newTaskDialog = document.getElementById("newTaskDialog");
-const newTaskForm = document.getElementById("newTaskForm");
-const newTaskButton = document.querySelector("#newTask");
+const newTDialog = document.getElementById("newTDialog");
+const newTForm = document.getElementById("newTForm");
+const newTButton = document.querySelector("#newTask");
 
-newTaskButton.addEventListener("click", () => newTaskDialog.showModal());
-const cancelTaskBtn = document.querySelector("#cancelTask");
+newTButton.addEventListener("click", () => newTDialog.showModal());
+const cancelTBtn = document.querySelector("#cancelT");
 
-cancelTaskBtn.addEventListener("click", () => newTaskDialog.close());
+cancelTBtn.addEventListener("click", () => newTDialog.close());
 
-newTaskForm.addEventListener("submit", (e) => {
-  e.preventDefault(); // <- evita que se recargue la página
+newTForm.addEventListener("submit", (e) => {
+  e.preventDefault()
 
-  const newTaskName = document.querySelector("#newTaskName").value;
+  const newTName = document.querySelector("#newTName").value;
 
   if (!currentProject) {
     alert("Please select a project first.");
     return;
   }
 
-  const newTask = new Task(newTaskName);
-  currentProject.addTask(newTask);
-  saveToLocalStorage(); // <- muy importante
+  const newT = new Task(newTName);
+  currentProject.addTask(newT);
+  saveToLocalStorage();
 
   populateTasks(currentProject);
-  newTaskDialog.close();
-  newTaskForm.reset(); // Limpia el formulario
+  newTDialog.close();
+  newTForm.reset();
 });
+
+const editPButton = document.querySelector("#editP");
+
+editPButton.addEventListener("click", () => editPDialog.showModal());

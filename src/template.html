@@ -18,8 +18,7 @@
     <div id="content">
       <div id="toDo">
         <h2 id="toDoTitle">ToDo <button id="newTask">+</button></h2>
-        <ul id="toDoUl">
-        </ul>
+        <ul id="toDoUl"></ul>
       </div>
       <div id="doing">
         <h2>Doing</h2>
@@ -31,35 +30,79 @@
       </div>
     </div>
 
-    <dialog id="newProjectDialog">
-      <form method="dialog" id="newProjectForm">
+    <dialog id="newPDialog">
+      <form method="dialog" id="newPForm">
         <div id="formContainer">
           <h2>New Project</h2>
-          <div class="nameRow">
-            <label for="newProjectName">project name: </label>
-            <input type="text" id="newProjectName" name="newProjectName">
+          <div class="row">
+            <label for="newPName">project name: </label>
+            <input type="text" id="newPName" name="newPName" />
           </div>
 
           <menu>
-            <button type="submit" id="createProject" class="create">Create</button>
-            <button type="button" id="cancelProject" class="cancel">Cancel</button>
+            <button type="submit" id="createP" class="create">Create</button>
+            <button type="button" id="cancelP" class="cancel">Cancel</button>
           </menu>
         </div>
       </form>
     </dialog>
 
-    <dialog id="newTaskDialog">
-      <form method="dialog" id="newTaskForm">
+    <dialog id="newTDialog">
+      <form method="dialog" id="newTForm">
         <div id="formContainer">
           <h2>New task</h2>
-          <div class="nameRow">
-            <label for="newTaskName">task name: </label>
-            <input type="text" id="newTaskName" name="newTaskName">
+          <div class="row">
+            <label for="newTName">task name: </label>
+            <input type="text" id="newTName" name="newTName" />
           </div>
 
           <menu>
-            <button type="submit" id="createTask" class="create">Create</button>
-            <button type="button" id="cancelTask" class="cancel">Cancel</button>
+            <button type="submit" id="createT" class="create">Create</button>
+            <button type="button" id="cancelT" class="cancel">Cancel</button>
+          </menu>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="editPDialog">
+      <form method="dialog" id="editPForm">
+        <div id="formContainer">
+          <h2>Edit project:</h2>
+          <div class="row">
+            <label for="editPName">new name: </label>
+            <input type="text" id="editProjectName" name="editPName" />
+          </div>
+          <menu>
+            <button type="submit" id="editP" class="create">Edit</button>
+            <button type="button" id="cancelEditP" class="cancel">
+              Cancel
+            </button>
+          </menu>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="editTDialog">
+      <form method="dialog" id="editTForm">
+        <div id="formContainer">
+          <h2>Edit task:</h2>
+          <div class="row">
+            <label for="editTName">new description: </label>
+            <input type="text" id="editTName" name="editTName" />
+          </div>
+          <div>
+            <label for="category">Categoria:</label>
+            <select id="category" name="category">
+              <option value="toDo">ToDo</option>
+              <option value="doing">Doing</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+          <menu>
+            <button type="submit" id="editT" class="create">Edit</button>
+            <button type="button" id="cancelEditT" class="cancel">
+              Cancel
+            </button>
           </menu>
         </div>
       </form>
